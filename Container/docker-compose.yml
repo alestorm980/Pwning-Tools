@@ -1,0 +1,11 @@
+version: '3'
+services:
+  pwnlab:
+    build: .
+    container_name: pwnlab
+    stdin_open: true
+    tty: true
+    ports:
+      - "5000:5000"  # Para acceder a gdbgui desde navegador
+    volumes:
+      - ./challenges:/home/pwner/challenges
