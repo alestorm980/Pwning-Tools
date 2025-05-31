@@ -51,9 +51,9 @@ RUN echo "alias pwn_create='cp /opt/xpl.py .'" >> /home/pwner/.bashrc
 
 RUN echo "source /home/pwner/pwndbg/gdbinit.py"  > ~/.gdbinit
 
-RUN echo "unbind C-b" >> /home/pwner/.tmux.conf && \
-    echo "set-option -g prefix C-a" >> /home/pwner/.tmux.conf && \
-    echo "bind C-a send-prefix" >> /home/pwner/.tmux.conf
+RUN echo "unbind C-b" >>  ~/.tmux.conf && \
+    echo "set-option -g prefix C-a" >>  ~/.tmux.conf && \
+    echo "bind C-a send-prefix" >>  ~/.tmux.conf
 
 RUN tmux source-file ~/.tmux.conf
 
