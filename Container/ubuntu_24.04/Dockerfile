@@ -42,6 +42,12 @@ RUN git clone https://github.com/pwndbg/pwndbg /home/pwner/pwndbg && \
 # Alias y config
 RUN echo "alias pwn_create='cp /opt/xpl.py .'" >> ~/.bashrc 
 
+RUN echo "unbind C-b" >> /root/.tmux.conf && \
+    echo "set-option -g prefix C-a" >> /root/.tmux.conf && \
+    echo "bind C-a send-prefix" >> /root/.tmux.conf
+
+RUN tmux source-file ~/.tmux.conf
+
 RUN mkdir /home/pwner/challenges
 VOLUME ["/home/pwner/challenges"]
 EXPOSE 5000

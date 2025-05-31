@@ -51,6 +51,12 @@ RUN echo "alias pwn_create='cp /opt/xpl.py .'" >> /home/pwner/.bashrc
 
 RUN echo "source /home/pwner/pwndbg/gdbinit.py"  > ~/.gdbinit
 
+RUN echo "unbind C-b" >> /root/.tmux.conf && \
+    echo "set-option -g prefix C-a" >> /root/.tmux.conf && \
+    echo "bind C-a send-prefix" >> /root/.tmux.conf
+
+RUN tmux source-file ~/.tmux.conf
+
 # Crear carpeta para retos y volumen
 RUN mkdir /home/pwner/challenges
 VOLUME ["/home/pwner/challenges"]
