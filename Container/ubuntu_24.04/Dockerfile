@@ -42,9 +42,9 @@ RUN git clone https://github.com/pwndbg/pwndbg /home/pwner/pwndbg && \
 # Alias y config
 RUN echo "alias pwn_create='cp /opt/xpl.py .'" >> ~/.bashrc 
 
-RUN echo "unbind C-b" >> /home/pwner/.tmux.conf && \
-    echo "set-option -g prefix C-a" >> /home/pwner/.tmux.conf && \
-    echo "bind C-a send-prefix" >> /home/pwner/.tmux.conf
+RUN echo "unbind C-b" >>  ~/.tmux.conf && \
+    echo "set-option -g prefix C-a" >>  ~/.tmux.conf && \
+    echo "bind C-a send-prefix" >>  ~/.tmux.conf
 
 RUN tmux source-file ~/.tmux.conf
 
