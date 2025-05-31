@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Dependencias base y para compilación de keystone/unicorn
+# Dependencias base y para compilación
 RUN apt update && apt install -y \
     sudo python3 python3-pip python3-dev \
     gdb git curl wget unzip \
@@ -22,12 +22,15 @@ RUN apt update && apt install -y \
 RUN useradd -ms /bin/bash pwner && \
     echo 'pwner ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
+# Copiar script y permisos (como root)
+COPY scripts/xpl.py /opt/xpl.py
+RUN chmod +x /opt/xpl.py && chown pwner:pwner /opt/xpl.py
+
+# Cambiar a usuario pwner
 USER pwner
 WORKDIR /home/pwner
 
-# Crear carpeta para retos
-RUN mkdir /home/pwner/challenges
-VOLUME ["/home/pwner/challenges"]
+RUN export PATH="$PATH:/home/pwner/.local/bin"
 
 # Instalar herramientas Python
 RUN pip3 install --upgrade pip setuptools && \
@@ -37,21 +40,20 @@ RUN pip3 install --upgrade pip setuptools && \
 RUN git clone https://github.com/pwndbg/pwndbg /home/pwner/pwndbg && \
     cd /home/pwner/pwndbg && ./setup.sh
 
-# Instalar radare2
-RUN git clone https://github.com/radareorg/radare2 /home/pwner/radare2 && \
-    /home/pwner/radare2/sys/install.sh
 
-# Instalar Keystone desde fuente
-RUN git clone https://github.com/keystone-engine/keystone.git /home/pwner/keystone && \
-    cd /home/pwner/keystone && \
-    mkdir build && cd build && \
-    cmake .. && make -j$(nproc) && sudo make install && sudo ldconfig
+RUN pip3 install keystone-engine
 
-# Instalar Unicorn desde fuente (usando CMake)
-RUN git clone https://github.com/unicorn-engine/unicorn.git /home/pwner/unicorn && \
-    cd /home/pwner/unicorn && \
-    mkdir build && cd build && \
-    cmake .. && make -j$(nproc) && sudo make install && sudo ldconfig
+
+
+
+# Alias para copiar script
+RUN echo "alias pwn_create='cp /opt/xpl.py .'" >> /home/pwner/.bashrc
+
+RUN echo "source /home/pwner/pwndbg/gdbinit.py"  > ~/.gdbinit
+
+# Crear carpeta para retos y volumen
+RUN mkdir /home/pwner/challenges
+VOLUME ["/home/pwner/challenges"]
 
 # Exponer puerto para gdbgui
 EXPOSE 5000
